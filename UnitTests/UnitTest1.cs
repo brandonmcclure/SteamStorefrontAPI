@@ -52,7 +52,7 @@ namespace UnitTests
             e.Initial = a.Initial;
             var result = RunTest(Equality.AreDifferent, () => a.Equals(e));
 
-            Assert.AreEqual(true, result);
+            Assert.AreEqual(false, result);
         }
     }
 }
