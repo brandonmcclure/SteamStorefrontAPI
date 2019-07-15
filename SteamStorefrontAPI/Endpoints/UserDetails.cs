@@ -25,7 +25,7 @@ namespace SteamStorefrontAPI.Classes.userdetails
         {
             if (string.IsNullOrEmpty(APIKey))
             {
-                throw new InvalidAPIKeyException();
+                throw new InvalidApiKeyException();
             }
             string steamUri = $"{steamBaseUri}?key={APIKey}&steamid={steamID}";
             steamUri = include_played_free_games ? steamUri : $"{steamUri}&include_played_free_games={include_played_free_games.ToString()}";
@@ -36,7 +36,6 @@ namespace SteamStorefrontAPI.Classes.userdetails
             var result = await response.Content.ReadAsStringAsync();
 
             var jsonData = JToken.Parse(result).First.First;
-            //if (!bool.Parse(jsonData["success"].ToString())) { return null; }
 
             return jsonData.ToObject<GamesSummary>();
         }
