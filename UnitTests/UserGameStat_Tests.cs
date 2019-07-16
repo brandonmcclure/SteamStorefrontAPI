@@ -5,7 +5,7 @@ using static SmartTests.SmartTest;
 namespace UnitTests
 {
     [TestClass]
-    class UserGameStat_Tests
+    public class UserGameStat_Tests
     {
         [TestMethod]
         public void Constructor_setsDefaults()

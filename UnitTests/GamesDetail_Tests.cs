@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 namespace UnitTests
 {
     [TestClass]
-    class GamesSummary_Tests
+    public class GamesSummary_Tests
     {
         [TestMethod]
         public void GetAsync_CanSerializeJSONResultToOurModel()
