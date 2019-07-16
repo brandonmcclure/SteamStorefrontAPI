@@ -121,8 +121,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GamesDetail_Tests.cs" />
     <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UserGameStat_Tests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

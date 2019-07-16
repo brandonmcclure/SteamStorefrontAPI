@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace SteamStorefrontAPI.Classes.userdetails
 {
     /// <summary>
-    /// A model that contains the app and the </summary> 
+    /// A model that contains the appID and the playtime_forever stat </summary> 
     public class UserGameStat
     {
         public int appid { get; set; }
