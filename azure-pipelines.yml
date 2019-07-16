@@ -60,7 +60,10 @@ steps:
     platform: '$(BuildPlatform)'
     configuration: '$(BuildConfiguration)'
     diagnosticsEnabled: True
-
+- task: PublishTestResults@2
+  inputs:
+    testResultsFormat: 'VSTest'
+    testResultsFiles: '**/TEST-*.xml'
 - task: PublishSymbols@2
   displayName: 'Publish symbols path'
   inputs:
