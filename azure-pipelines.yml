@@ -1,0 +1,89 @@
+trigger:
+ batch: true
+ branches:
+    include:
+    - master
+ paths:
+    include:
+    - SteamStorefrontAPI/*
+    - SteamStorefrontConsole/*
+    - build/*
+
+pool:
+  name: Hosted VS2017
+  demands:
+  - msbuild
+  - visualstudio
+  - java
+  - vstest
+
+variables:
+  configuration: debug
+  system.debug: false
+  BuildPlatform: any cpu
+  BuildConfiguration: release
+
+steps:
+- task: SonarCloudPrepare@1
+  inputs:
+    SonarCloud: 'sq SteamStorefrontAPI'
+    organization: 'brandonmcclure-github'
+    scannerMode: 'MSBuild'
+    projectKey: 'brandonmcclure_SteamStorefrontAPI'
+    projectName: 'brandonmcclure_SteamStorefrontAPI'
+
+- task: NuGetToolInstaller@0
+  displayName: 'Use NuGet 4.4.1'
+  inputs:
+    versionSpec: 4.4.1
+
+- task: NuGetCommand@2
+  displayName: 'NuGet restore'
+  inputs:
+    restoreSolution: '**\*.sln'
+
+- task: VSBuild@1
+  displayName: 'Build solution **\*.sln'
+  inputs:
+    solution: '**\*.sln'
+    platform: '$(BuildPlatform)'
+    configuration: '$(BuildConfiguration)'
+
+- task: SonarCloudAnalyze@1
+
+- task: VSTest@2
+  displayName: 'VsTest - testAssemblies'
+  inputs:
+    testAssemblyVer2: |
+     **\$(BuildConfiguration)\*test*.dll
+     !**\obj\**
+    platform: '$(BuildPlatform)'
+    configuration: '$(BuildConfiguration)'
+    diagnosticsEnabled: True
+- task: PublishTestResults@2
+  inputs:
+    testResultsFormat: 'VSTest'
+    testResultsFiles: '**/TEST-*.xml'
+- task: PublishSymbols@2
+  displayName: 'Publish symbols path'
+  inputs:
+    SearchPattern: '**\bin\**\*.pdb'
+    PublishSymbols: false
+  continueOnError: true
+
+- task: CopyFiles@2
+  displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
+  inputs:
+    SourceFolder: '$(system.defaultworkingdirectory)'
+    Contents: '**\bin\$(BuildConfiguration)\**'
+    TargetFolder: '$(build.artifactstagingdirectory)'
+
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: drop'
+  inputs:
+    PathtoPublish: '$(build.artifactstagingdirectory)'
+
+- task: SonarCloudPublish@1
+  inputs:
+    pollingTimeoutSec: '300'
